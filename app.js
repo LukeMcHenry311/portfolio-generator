@@ -1,48 +1,18 @@
-const profileDataArgs = process.argv.slice(2, process.argv.length);
+const fs = require('fs');
+const generatePage = require('./src/page-template');
 
-const generatePage = (beep, github) => {
-  return `
-  <!DOCTYPE html> 
-  <html lang="en"> 
-  <head>
-    <meta charset="UTF-8">
-    <meta beep="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Portfolio Demo</title>
-  </head>
+const profileDataArgs = process.argv.slice(2);
 
-  <body>
-    <h1>${beep}</h1>
-    <h2><a href="https://github.com/${github}">Github</a></h2>
-  </body>
-  </html>
-  `;
-};
+console.log(profileDataArgs);
 
-const [beep, github] = profileDataArgs;
-console.log(beep, github);
-console.log(generatePage(beep, github));
+const [name, github] = profileDataArgs;
 
-// parameter differences
-// const generatePage = () => 'beep: Jane, Github: janehub';
+console.log(name, github);
 
-// parameter differences
-// const generatePage = (userbeep, githubbeep) => `beep: ${userbeep}, Github: ${githubbeep}`;
+const pageHTML = generatePage(name, github);
 
-console.log(generatePage());
-console.log(generatePage('Jane', 'janehub'));
+fs.writeFile('./index.html', pageHTML, err => {
+  if (err) throw err;
 
-// Notice the lack of parentheses around the `profileDataArr` parameter?
-const printProfileData = profileDataArr => {
-    // This...
-    for (let i = 0; i < profileDataArr.length; i += 1) {
-      console.log(profileDataArr[i]);
-    }
-  
-    console.log('================');
-  
-    // Is the same as this...
-    profileDataArr.forEach(profileItem => console.log(profileItem));
-};
-
-printProfileData(profileDataArgs);
+  console.log('Portfolio complete! Check out index.html to see the output!');
+});
